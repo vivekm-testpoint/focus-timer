@@ -136,15 +136,15 @@
 	    font-size: 2.2rem;
 	}</style>
 
-<div style="display: none;" class="shadow__2m-LGF4UrguoBp8X8jm3Y6 flex__3Bn8_xPP40dn7KC2irK0j0 col__3V13k2XbofAGlwuLwbiW7 dropdown__2J5PpoTcoQNQHZRbSqaNHu">
+<div style="display: none;" class="timer-ready shadow__2m-LGF4UrguoBp8X8jm3Y6 flex__3Bn8_xPP40dn7KC2irK0j0 col__3V13k2XbofAGlwuLwbiW7 dropdown__2J5PpoTcoQNQHZRbSqaNHu">
 			<div class="content__1wLELogSwZi8YS_be0yqH8" style="padding-top: 0px; ">
 				<div>
 					<h2>Focus Timer</h2>
 					<div class="headline">Set a timer to stay focused and get more done!</div>
-					<form action="start-timer" id="timer-form" class="timeForm__1btHZX5dhsc1nOl_JsVe1Q">
-						<input type="text" class="Input__3PqIovOKhwXjggTB2PtamX timeInputBox__1Sxcig_3zPgTEzZj3bicjM" value="15"><span class="minutesLabel__2Aa9UMzIP07BehXs_vRxfI">Minutes</span>
+					<form action="" id="timer-form" class="timeForm__1btHZX5dhsc1nOl_JsVe1Q">
+						<input id="timer_input" type="text" class="Input__3PqIovOKhwXjggTB2PtamX timeInputBox__1Sxcig_3zPgTEzZj3bicjM" value="15"><span class="minutesLabel__2Aa9UMzIP07BehXs_vRxfI">Minutes</span>
 					</form>
-					<button class="basicBtn__3xa1QN1wgQsDZ1jCBiNCJ_ btn__2v-TLC9Odx5KkacwG29i-V btn-brand-purple__3e6nwHbcwpZsgA_deMwZzX commitButton__xovRqMzReHqwhevYHoRFZ" data-btn="true">Start</button>
+					<button id="start-timer-btn" class="basicBtn__3xa1QN1wgQsDZ1jCBiNCJ_ btn__2v-TLC9Odx5KkacwG29i-V btn-brand-purple__3e6nwHbcwpZsgA_deMwZzX commitButton__xovRqMzReHqwhevYHoRFZ" data-btn="true">Start</button>
 				</div>
 			</div>
 </div>
@@ -192,8 +192,8 @@
 	.time__3r1y1kpJ8Z5XB5P2BpdUvI {
 	    z-index: 1;
 	    position: absolute;
-	    top: 109px;
-	    left: 92px;
+        top: 107px;
+		left: 92px;
 	    padding: 1.5rem;
 	    margin-bottom: 2rem;
 	}
@@ -220,7 +220,7 @@
 	    border: 1px solid #6400e4;
 	}
 
-	.running-timer {
+	.timer-running {
 	    margin: 0;
 	    font-family: Nunito Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
 	    font-weight: 400;
@@ -232,7 +232,7 @@
 	}
 </style>
 
-<div style="display: none;" class="running-timer shadow__2m-LGF4UrguoBp8X8jm3Y6 flex__3Bn8_xPP40dn7KC2irK0j0 col__3V13k2XbofAGlwuLwbiW7 dropdown__2J5PpoTcoQNQHZRbSqaNHu">
+<div style="display: none;" class="timer-running shadow__2m-LGF4UrguoBp8X8jm3Y6 flex__3Bn8_xPP40dn7KC2irK0j0 col__3V13k2XbofAGlwuLwbiW7 dropdown__2J5PpoTcoQNQHZRbSqaNHu">
 	<div class="content__1wLELogSwZi8YS_be0yqH8" style="padding-top: 0px;">
 		<div>
 			<h2>Time Remaining</h2>
@@ -248,7 +248,7 @@
 					</svg>
 				</div>
 				<div class="time__3r1y1kpJ8Z5XB5P2BpdUvI">
-					<strong class="strong__3-SLkUA95YKNfhgwcJmzqW">15</strong>
+					<strong class="running-time strong__3-SLkUA95YKNfhgwcJmzqW">15</strong>
 					<div class="timeRemaining__167tYlItbAzLdJcKUYTK0F">Minutes left</div>
 				</div>
 			</div>
@@ -270,7 +270,7 @@
     margin-bottom: 1rem;
 	}
 
-	.take-a-break {
+	.timer-finished {
     margin: 0;
     font-family: Nunito Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
     font-weight: 400;
@@ -281,7 +281,7 @@
 	}
 </style>
 
-<div style="display: none; " class="take-a-break shadow__2m-LGF4UrguoBp8X8jm3Y6 flex__3Bn8_xPP40dn7KC2irK0j0 col__3V13k2XbofAGlwuLwbiW7 dropdown__2J5PpoTcoQNQHZRbSqaNHu">
+<div style="display: none; " class="timer-finished shadow__2m-LGF4UrguoBp8X8jm3Y6 flex__3Bn8_xPP40dn7KC2irK0j0 col__3V13k2XbofAGlwuLwbiW7 dropdown__2J5PpoTcoQNQHZRbSqaNHu">
 		<div class="content__1wLELogSwZi8YS_be0yqH8" style="padding-top: 0px;">
 			<h2>Great job!</h2>
 			<p>Take a short break and keep going!</p>
@@ -291,7 +291,43 @@
 			</div>
 		</div>
 
+<script type="text/javascript">
+	window.timer_states = {'ready': 0, 'running': 1, 'finished': 2};
+	window.timer = {'state': window.timer_states.ready, 'started_at': 0};
 
+	setInterval(() => {
+		if (window.timer.state == timer_states.ready) {
+			document.querySelector('.timer-running').style.display = 'none';
+			document.querySelector('.timer-finished').style.display = 'none';
+			document.querySelector('.timer-ready').style.display = '';
+		} else if (window.timer.state == timer_states.running) {
+			let current_time = (+ new Date());
+
+			let time_diff = current_time - window.timer.started_at;
+			document.querySelector('.timer-running').style.display = '';
+			document.querySelector('.timer-finished').style.display = 'none';
+			document.querySelector('.timer-ready').style.display = 'none';
+
+			if (current_time >= window.timer.finish_at) {
+				window.timer.state = window.timer_states.finished;
+			}
+		} else if (window.timer.state == timer_states.finished) {
+			document.querySelector('.timer-finished').style.display = '';
+			document.querySelector('.timer-running').style.display = 'none';
+			document.querySelector('.timer-ready').style.display = 'none';
+		}
+	}, 200);
+
+	function start_timer(event) {
+		let timer_input = document.querySelector('#timer_input').value;
+		document.querySelector('.running-time').innerHTML = timer_input;
+		window.timer.started_at = (+ new Date());
+		window.timer.finish_at = window.timer.started_at + (Number(timer_input) * 60);
+		window.timer.state = window.timer_states.running;
+	}
+
+	document.querySelector('#start-timer-btn').addEventListener('click', start_timer);
+</script>
 
 
 
