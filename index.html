@@ -140,6 +140,7 @@
 			<div class="content__1wLELogSwZi8YS_be0yqH8" style="padding-top: 0px; ">
 				<div>
 					<h2>Focus Timer</h2>
+					<span class="error-msg" style="display: none; color: red; "></span>
 					<div class="headline">Set a timer to stay focused and get more done!</div>
 					<form action="" id="timer-form" class="timeForm__1btHZX5dhsc1nOl_JsVe1Q">
 						<input id="timer_input" type="text" class="Input__3PqIovOKhwXjggTB2PtamX timeInputBox__1Sxcig_3zPgTEzZj3bicjM" value="15"><span class="minutesLabel__2Aa9UMzIP07BehXs_vRxfI">Minutes</span>
@@ -371,6 +372,24 @@
 
 	function start_timer(event) {
 		let timer_input = document.querySelector('#timer_input').value;
+		let error = 0;
+		document.querySelector('.error-msg').style.display = 'none';
+
+		if (isNaN(timer_input)) {
+			document.querySelector('.error-msg').innerHTML = 'Please add only numbers';
+			error++;
+		}
+
+		if (timer_input >= 100) {
+			document.querySelector('.error-msg').innerHTML = 'Time must be less then 100 Minutes';
+			error++;
+		}
+
+		if (error != 0) {
+			document.querySelector('.error-msg').style.display = 'block';
+			return; 
+		}
+
 		document.querySelector('.running-time').innerHTML = timer_input;
 		window.timer.started_at = (+ new Date());
 		window.timer.finish_at = window.timer.started_at + (Number(timer_input) * 60 * 1000);
