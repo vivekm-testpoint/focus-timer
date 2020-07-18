@@ -296,15 +296,15 @@
 	window.timer = retrive('timer');
 	window.timer_states = retrive('timer_states');
 
+	if (window.timer_states == null) {
+		window.timer_states = {'ready': 0, 'running': 1, 'finished': 2, 'paused': 3, 'resumed': 4};
+		store('timer_states', window.timer_states);
+	}
+
 	if (window.timer == null) {
 		window.timer = {'state': window.timer_states.ready, 'started_at': 0, 'time': 0, 'time_remaining': 0, 'paused_at': 0};
 		
 		store('timer', window.timer);
-	}
-
-	if (window.timer_states == null) {
-		window.timer_states = {'ready': 0, 'running': 1, 'finished': 2, 'paused': 3, 'resumed': 4};
-		store('timer_states', window.timer_states);
 	}
 
 	setInterval(() => {
@@ -312,46 +312,61 @@
 			document.querySelector('.timer-running').style.display = 'none';
 			document.querySelector('.timer-finished').style.display = 'none';
 			document.querySelector('.timer-ready').style.display = '';
+
+			store('timer', window.timer);
+			store('timer_states', window.timer_states);
 		} else if (window.timer.state == timer_states.running) {
 			document.querySelector('#pause-timer-btn').innerHTML = 'Pause';
 			let current_time = (+ new Date());
 
-			let time_diff = current_time - window.timer.started_at;
 			document.querySelector('.timer-running').style.display = '';
 			document.querySelector('.timer-finished').style.display = 'none';
 			document.querySelector('.timer-ready').style.display = 'none';
 
-			let time_remaining = parseInt(window.timer.time - (time_diff/60000));
-			
+			let time_remaining = parseInt((window.timer.finish_at - current_time)/60000) + 1;
+
+			document.querySelector('.running-time').innerHTML = window.timer.time_remaining;
 
 			if (window.timer.time_remaining != time_remaining) {
 				window.timer.time_remaining = time_remaining;
-				document.querySelector('.running-time').innerHTML = window.timer.time_remaining;
 			}
 
 			if (current_time >= window.timer.finish_at) {
 				window.timer.state = window.timer_states.finished;
 			}
+
+			store('timer', window.timer);
+			store('timer_states', window.timer_states);
 		} else if (window.timer.state == timer_states.finished) {
 			document.querySelector('.timer-finished').style.display = '';
 			document.querySelector('.timer-running').style.display = 'none';
 			document.querySelector('.timer-ready').style.display = 'none';
+
+			store('timer', window.timer);
+			store('timer_states', window.timer_states);
 		} else if (window.timer.state == timer_states.paused) {
 
+			document.querySelector('.timer-running').style.display = '';
+			document.querySelector('.timer-finished').style.display = 'none';
+			document.querySelector('.timer-ready').style.display = 'none';
+
+			document.querySelector('.running-time').innerHTML = window.timer.time_remaining;
 			window.timer.paused_at = (+ new Date());
 			document.querySelector('#pause-timer-btn').innerHTML = 'Resume';
+			store('timer', window.timer);
+			store('timer_states', window.timer_states);
 		} else if (window.timer.state == timer_states.resumed) {
 
 
-			window.timer.finish_at = window.timer.finish_at + (Number(window.timer.time_remaining) * 60 * 1000);
+			window.timer.finish_at = (+ new Date()) + (Number(window.timer.time_remaining) * 60 * 1000);
 			window.timer.started_at = window.timer.started_at + ((+ new Date()) - window.timer.paused_at);
 			window.timer.state = window.timer_states.running;
 
 			document.querySelector('#pause-timer-btn').innerHTML = 'Pause';
-		}
 
-		store('timer', window.timer);
-		store('timer_states', window.timer_states);
+			store('timer', window.timer);
+			store('timer_states', window.timer_states);
+		}
 	}, 200);
 
 	function start_timer(event) {
