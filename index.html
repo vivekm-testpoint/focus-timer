@@ -292,8 +292,20 @@
 		</div>
 
 <script type="text/javascript">
-	window.timer_states = {'ready': 0, 'running': 1, 'finished': 2, 'paused': 3, 'resumed': 4};
-	window.timer = {'state': window.timer_states.ready, 'started_at': 0, 'time': 0, 'time_remaining': 0, 'paused_at': 0};
+
+	window.timer = retrive('timer');
+	window.timer_states = retrive('timer_states');
+
+	if (window.timer == null) {
+		window.timer = {'state': window.timer_states.ready, 'started_at': 0, 'time': 0, 'time_remaining': 0, 'paused_at': 0};
+		
+		store('timer', window.timer);
+	}
+
+	if (window.timer_states == null) {
+		window.timer_states = {'ready': 0, 'running': 1, 'finished': 2, 'paused': 3, 'resumed': 4};
+		store('timer_states', window.timer_states);
+	}
 
 	setInterval(() => {
 		if (window.timer.state == timer_states.ready) {
@@ -335,9 +347,11 @@
 			window.timer.started_at = window.timer.started_at + ((+ new Date()) - window.timer.paused_at);
 			window.timer.state = window.timer_states.running;
 
-			console.log(window.timer)
 			document.querySelector('#pause-timer-btn').innerHTML = 'Pause';
 		}
+
+		store('timer', window.timer);
+		store('timer_states', window.timer_states);
 	}, 200);
 
 	function start_timer(event) {
@@ -372,6 +386,14 @@
 	document.querySelector('#restart-timer-btn').addEventListener('click', finish_timer);
 
 	document.querySelector('#pause-timer-btn').addEventListener('click', toggle_timer);
+
+	function store(key, obj) {
+		window.localStorage.setItem(key, JSON.stringify(obj));
+	}
+
+	function retrive(key) {
+		return JSON.parse(window.localStorage.getItem(key));
+	}
 </script>
 
 
